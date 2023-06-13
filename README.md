@@ -49,6 +49,8 @@ If you don’t follow these principles in microservices architecture, you will a
 
 # Docker
 
+Docker lunchbox analogy
+
 ### What is Docker
 
 Docker is a software platform that allows you to build, test, and deploy applications quickly. Docker packages software into standardized units called containers that have everything the software needs to run including libraries, system tools, code, and runtime. Using Docker, you can quickly deploy and scale applications into any environment and know your code will run.
@@ -60,3 +62,75 @@ Docker is a software platform that allows you to build, test, and deploy applica
 3. Hosting servers
 4. Creating custom linux images
 5. Creating developmemnt environments
+
+# How to use Docker to deploy an app
+
+`docker` - To see list of Docker commands
+`docker --version` - To see what verison of Docker is installed
+
+`docker run hello-world` - A docker image called hello-world
+
+monolithic - user interface -> business logic -> data access layer -> database
+
+sign up on docker hub
+
+create repo?
+
+download nginx image
+create a container out of it
+
+`docker ps` - tocheck for containers running
+`docker ps -a` - all containers showing
+`docker run -d -p 80:80 nginx`
+go to localhost in browser and you'll see nginx running
+
+containerisation - lightweight, fast compared to virtualisation, quick integration
+
+container is running -> vm is running -> ec2 is running
+
+to interact with a running container, need:
+
+name
+id
+
+`docker exec -it container-id sh` sh -> shell mode
+
+'#' shows you're in the running shell now
+`# pwd`
+`# ls`
+
+`apt update -y` - update completed
+`cd /usr/share/nginx/html`
+`apt install sudo` - becuase it's a fresh machine
+`sudo apt install nano`
+`sudo nano index.html`
+
+`docker delete <id> -f` - to delete the container
+`docker rm <container-id> -f`
+`docker ps`
+
+1. `docker run -d -p 80:80 nginx`
+2. copy file from localhost to container - `sudo docker cp index.html 556df6c6da54:/usr/share/nginx/html`, should see successfully copied message
+3. create dockerhub account and repo titled 'docker-profile-project'
+4. cd into directory where you created index.html file and create `Dockerfile`, include following code
+
+```
+FROM nginx:alpine
+COPY . /usr/share/nginx/html
+```
+
+5. `docker build .`
+6. tag your docker image using img id, use command `docker tag c6369a309815 ahmedmujtba/docker-profile-project:v1`
+7. push your image to dockerhub repo with docker push command (make sure you are logged into docker desktop)
+   `docker push ahmedmujtba/docker-profile-project:v1`
+8. make sure your port is not already assigned so run `docker container ls -a` and if any other container is already running you can stop by running the command `docker stop <container-id>`
+9. `docker run -d -p 80:80 ahmedmujtba/docker-profile-project:v1`
+
+# ignore the steps below
+
+8. `docker exec -it id sh`
+
+- `apt update -y` - update completed
+
+3. Create a repo on docker after creating your account.
+4. `docker build -t ahmedmujtba/docker-profile-project:v1`
